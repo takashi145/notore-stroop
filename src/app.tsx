@@ -149,22 +149,9 @@ export function App() {
               </div>
             </div>
 
-            <div class="flex items-center justify-center my-12 rounded-2xl relative">
-              {countdown !== null ? (
-                <div class="text-gray-600 text-6xl sm:text-8xl font-black">
-                  {countdown}
-                </div>
-              ) : (
-                <div
-                  class="text-8xl md:text-9xl font-black text-center w-full"
-                  style={{ color: COLOR_MAP[displayColor] }}
-                >
-                  {displayText}
-                </div>
-              )}
-
+            <div class="flex items-center justify-center mb-12 rounded-2xl relative">
               {result !== null && (
-                <div class="absolute -top-2.5 left-1/2 -translate-x-1/2 pointer-events-none">
+                <div class="absolute top-0 left-1/2 -translate-x-1/2 pointer-events-none">
                   <div class={`text-center py-2 px-6 rounded-lg font-bold text-lg sm:text-xl ${
                     result
                       ? 'border border-green-500 text-green-500 bg-green-500/20'
@@ -174,6 +161,21 @@ export function App() {
                   </div>
                 </div>
               )}
+
+              <div class="mt-8">
+                {countdown !== null ? (
+                  <div class="text-gray-600 text-6xl sm:text-8xl font-black">
+                    {countdown}
+                  </div>
+                ) : (
+                  <div
+                    class="text-8xl md:text-9xl font-black text-center w-full"
+                    style={{ color: COLOR_MAP[displayColor] }}
+                  >
+                    {displayText}
+                  </div>
+                )}
+              </div>
             </div>
 
             <div class="grid grid-cols-2 gap-6 max-w-sm mx-auto">
