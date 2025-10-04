@@ -17,9 +17,16 @@ const COLOR_MAP: Record<typeof COLORS[number], string> = {
   '黄': '#fbc02d',
 }
 
+// モード表示用マップ
+const MODE_DISPLAY_MAP: Record<GameMode, string> = {
+  'color': '色を答える',
+  'text': '文字を答える',
+  'random': 'ランダム',
+}
+
 const GAME_TIME_LIMIT = 60 // ゲームの制限時間（秒）
 
-type GameMode = 'color' | 'text'
+type GameMode = 'color' | 'text' | 'random'
 
 export function StroopGame() {
   const [gameStarted, setGameStarted] = useState(false)
@@ -32,6 +39,7 @@ export function StroopGame() {
   const [disabled, setDisabled] = useState(false) // 回答ボタンの無効化
   const [totalAnswers, setTotalAnswers] = useState(0)
   const [countdown, setCountdown] = useState<number | null>(null) // ゲーム開始前のカウントダウン
+  const [currentMode, setCurrentMode] = useState<GameMode | null>(null) // ランダムモード時の現在のモード
 
   // ゲーム開始
   const startGame = (selectedMode: GameMode) => {
@@ -54,8 +62,19 @@ export function StroopGame() {
 
     setDisabled(true);
 
-    const correctAnswer = mode === 'color' ? displayColor : displayText;
+    // モードに応じて解答の正解を決定
+    // randomの場合はcurrentModeに従う
+    const correctAnswer = mode === 'random'
+      ? (currentMode === 'color' ? displayColor : displayText)
+      : (mode === 'color' ? displayColor : displayText);
 
+    // ランダムモードの場合、次の問題のモードをランダムに決定
+    if (mode === 'random') {
+      const nextMode = selectRandomMode();
+      setCurrentMode(nextMode);
+    }
+
+    // 回答の正誤判定
     if (answer === correctAnswer) {
       setScore((prev) => prev + 1);
       setResult(true);
@@ -73,12 +92,25 @@ export function StroopGame() {
     }, 500);
   }
 
+  const selectRandomMode = () => {
+    return Math.random() < 0.5 ? 'color' : 'text';
+  }
+
   // ゲーム開始時にタイマーをセット
   useEffect(() => {
     if (!gameStarted) return
 
     setScore(0)
     setTimeLeft(GAME_TIME_LIMIT)
+
+    if (mode === 'random') {
+      const initialMode = selectRandomMode();
+      setCurrentMode(initialMode);
+    } else {
+      setCurrentMode(null);
+    }
+    setTotalAnswers(0)
+    setResult(null)
 
     // 最初の問題を生成
     generateNewChallenge()
@@ -142,7 +174,7 @@ export function StroopGame() {
               <div class="text-right">
                 <div class="text-xs text-gray-500 mb-1">モード</div>
                 <div class="font-bold text-gray-800">
-                  {mode === 'color' ? '色を答える' : '文字を答える'}
+                  {MODE_DISPLAY_MAP[mode]}
                 </div>
               </div>
             </div>
@@ -171,6 +203,20 @@ export function StroopGame() {
             )}
 
             <div class="mt-8">
+              {currentMode && mode === 'random' && (
+                <div class="text-center mb-4 font-bold text-gray-800">
+                  {currentMode === 'color' ? (
+                    <div>
+                      <span class="text-xl text-blue-500">色</span>を答えてください
+                    </div>
+                  ) : (
+                    <div>
+                      <span class="text-xl text-purple-500">文字</span>を答えてください
+                    </div>
+                  )}
+                </div>
+              )}
+
               {countdown !== null ? (
                 <div class="text-gray-600 text-6xl sm:text-8xl font-black">
                   {countdown}
@@ -220,7 +266,7 @@ export function StroopGame() {
   }
 
   // ゲーム結果画面
-  if (timeLeft === 0) {
+  if (timeLeft === 0 && mode !== null) {
     const accuracy = totalAnswers > 0 ? Math.round((score / totalAnswers) * 100) : 0;
     const avgTimePerAnswer = totalAnswers > 0 ? (GAME_TIME_LIMIT / totalAnswers).toFixed(1) : '0';
     return (
@@ -228,7 +274,7 @@ export function StroopGame() {
 			<h1 class="text-5xl font-bold text-gray-800">終了！</h1>
 
 			<div class="text-gray-600 text-lg">
-				モード: <span class="font-bold">{mode === 'color' ? '色を答える' : '文字を答える'}</span>
+				モード: <span class="font-bold">{MODE_DISPLAY_MAP[mode]}</span>
 			</div>
 
 			<div class="bg-blue-400 rounded-xl p-10">
@@ -275,7 +321,7 @@ export function StroopGame() {
         <h1 class="text-4xl font-bold text-center text-gray-800 mb-12">
           ストループ効果 脳トレ
         </h1>
-        <div class="flex flex-col md:flex-row gap-4 justify-center">
+        <div class="grid grid-cols-1 md:grid-cols-1 gap-4 justify-center">
           <button
             onClick={() => startGame('color')}
             class="px-8 py-4 bg-blue-500 rounded-xl hover:bg-blue-600 transform hover:scale-105 transition-all shadow-lg cursor-pointer"
@@ -289,6 +335,15 @@ export function StroopGame() {
           >
             <h2 class="text-xl font-bold text-white mb-2">文字を答えるモード</h2>
             <p class="text-sm text-gray-300">色に惑わされず、文字を答えてください</p>
+          </button>
+          <button
+            onClick={() => startGame('random')}
+            class="px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl transform hover:scale-105 transition-all shadow-lg cursor-pointer"
+          >
+            <h2 class="text-xl font-bold text-white mb-2">ランダムモード</h2>
+            <p class="text-sm text-gray-300">
+              色を答えるモードと文字を答えるモードがランダムに切り替わります
+            </p>
           </button>
         </div>
       </div>
