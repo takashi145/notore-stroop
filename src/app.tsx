@@ -30,6 +30,7 @@ export function App() {
   const [displayColor, setDisplayColor] = useState('')
   const [result, setResult] = useState<boolean | null>(null)  // 正解・不正解
   const [disabled, setDisabled] = useState(false) // 回答ボタンの無効化
+  const [totalAnswers, setTotalAnswers] = useState(0)
 
   // ゲーム開始
   const startGame = (selectedMode: GameMode) => {
@@ -59,6 +60,7 @@ export function App() {
     } else {
       setResult(false);
     }
+    setTotalAnswers((prev) => prev + 1);
 
     // 次の問題を表示
     // 若干遅延させて結果を見せる
@@ -83,12 +85,8 @@ export function App() {
     const timer = setInterval(() => {
       setTimeLeft((prev) => {
         if (prev <= 1) {
-          // 時間になったらゲーム終了
           clearInterval(timer)
-          setGameStarted(false)
-          setMode(null)
-          alert(`ゲーム終了。スコアは ${score} 点です。`)
-          return GAME_TIME_LIMIT
+          return 0
         }
         return prev - 1
       })
@@ -98,7 +96,7 @@ export function App() {
   }, [gameStarted])
 
   // ゲーム画面
-  if (gameStarted && mode) {
+  if (gameStarted && mode !== null && timeLeft > 0) {
     return (
       <>
         <div class="min-h-screen bg-blue-50 flex items-center justify-center p-8">
@@ -163,6 +161,57 @@ export function App() {
           </div>
         </div>
       </>
+    )
+  }
+
+  // ゲーム結果画面
+  if (timeLeft === 0) {
+    const accuracy = totalAnswers > 0 ? Math.round((score / totalAnswers) * 100) : 0;
+    const avgTimePerAnswer = totalAnswers > 0 ? (GAME_TIME_LIMIT / totalAnswers).toFixed(1) : '0';
+    return (
+      <div class="min-h-screen bg-blue-50 flex items-center justify-center p-8">
+        <div class="max-w-2xl w-full bg-white rounded-2xl shadow-2xl p-12 space-y-8 text-center">
+          <h1 class="text-5xl font-bold text-gray-800">終了！</h1>
+
+          <div class="text-gray-600 text-lg">
+            モード: <span class="font-bold">{mode === 'color' ? '色を答える' : '文字を答える'}</span>
+          </div>
+
+          <div class="bg-blue-400 rounded-xl p-10">
+            <div class="text-white text-2xl mb-3">正解数</div>
+            <div class="text-8xl font-bold text-white">{score}</div>
+            <div class="text-white text-xl mt-3">/ {totalAnswers}問</div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            <div class="bg-green-50 rounded-xl p-6">
+              <div class="text-green-600 text-sm font-semibold mb-2">正解率</div>
+              <div class="text-4xl font-bold text-green-700">{accuracy}%</div>
+            </div>
+            <div class="bg-blue-50 rounded-xl p-6">
+              <div class="text-blue-600 text-sm font-semibold mb-2">平均回答時間</div>
+              <div class="text-4xl font-bold text-blue-700">{avgTimePerAnswer}秒</div>
+            </div>
+            <div class="bg-red-50 rounded-xl p-6">
+              <div class="text-red-600 text-sm font-semibold mb-2">不正解</div>
+              <div class="text-4xl font-bold text-red-700">{totalAnswers - score}問</div>
+            </div>
+          </div>
+
+          <button
+            onClick={() => {
+              setTimeLeft(GAME_TIME_LIMIT)
+              setScore(0)
+              setTotalAnswers(0)
+              setMode(null)
+              setGameStarted(false)
+            }}
+            class="mt-6 px-8 py-4 bg-blue-500 rounded-xl hover:bg-blue-600 transform hover:scale-105 transition-all shadow-lg text-white font-bold cursor-pointer"
+          >
+            ホームに戻る
+          </button>
+        </div>
+      </div>
     )
   }
 
