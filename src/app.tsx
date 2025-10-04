@@ -231,16 +231,16 @@ export function App() {
             <div class="text-white text-xl mt-3">/ {totalAnswers}問</div>
           </div>
 
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
-            <div class="bg-green-50 rounded-xl p-6">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div class="bg-green-50 rounded-xl p-6 border border-green-200">
               <div class="text-green-600 text-sm font-semibold mb-2">正解率</div>
               <div class="text-4xl font-bold text-green-700">{accuracy}%</div>
             </div>
-            <div class="bg-blue-50 rounded-xl p-6">
+            <div class="bg-blue-50 rounded-xl p-6 border border-blue-200">
               <div class="text-blue-600 text-sm font-semibold mb-2">平均回答時間</div>
               <div class="text-4xl font-bold text-blue-700">{avgTimePerAnswer}秒</div>
             </div>
-            <div class="bg-red-50 rounded-xl p-6">
+            <div class="bg-red-50 rounded-xl p-6 border border-red-200">
               <div class="text-red-600 text-sm font-semibold mb-2">不正解</div>
               <div class="text-4xl font-bold text-red-700">{totalAnswers - score}問</div>
             </div>
