@@ -4,28 +4,29 @@ interface LayoutProps {
 	children: preact.ComponentChildren
 }
 
-const darkModeKey = 'notore_stroop_dark_mode'
+// 初期状態を同期的に取得する関数
+const getInitialDarkMode = (): boolean => {
+	const theme = localStorage.getItem('theme')
+	if (theme) {
+		return theme === 'dark'
+	} else {
+		return window.matchMedia('(prefers-color-scheme: dark)').matches
+	}
+}
 
 export const Layout = ({ children }: LayoutProps) => {
-	const [isDarkMode, setIsDarkMode] = useState(false)
+	const [isDarkMode, setIsDarkMode] = useState(getInitialDarkMode)
 
-	// ローカルストレージからダークモード設定を読み込み
 	useEffect(() => {
-		const theme = localStorage.getItem(darkModeKey)
-		if (theme) {
-			setIsDarkMode(theme === 'true')
-		} else {
-			// システムの設定を確認
-			const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-			setIsDarkMode(prefersDark)
-		}
+		const initialDarkMode = getInitialDarkMode()
+		setIsDarkMode(initialDarkMode)
 	}, [])
 
 	// ダークモード切り替え
 	const toggleDarkMode = () => {
 		const newDarkMode = !isDarkMode
 		setIsDarkMode(newDarkMode)
-		localStorage.setItem(darkModeKey, newDarkMode.toString())
+		localStorage.setItem('theme', newDarkMode ? 'dark' : 'light')
 	}
 
 	useEffect(() => {

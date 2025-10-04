@@ -4,6 +4,20 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>stroop-app</title>
+    <script>
+      (function() {
+        const theme = localStorage.getItem('theme');
+        let isDarkMode = false;
+        if (theme) {
+          isDarkMode = theme === 'dark';
+        } else {
+          isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        }
+        if (isDarkMode) {
+          document.documentElement.classList.add('dark');
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="app"></div>
