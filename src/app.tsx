@@ -124,9 +124,9 @@ export function App() {
   if (isGameScreenVisible) {
     return (
       <>
-        <div class="min-h-screen bg-blue-50 flex items-center justify-center p-8">
-          <div class="max-w-4xl w-full bg-white rounded-2xl shadow-2xl p-4 sm:p-6 space-y-3 sm:space-y-4">
-            <div class="bg-gray-50 rounded-xl p-3 sm:p-4 space-y-3">
+        <div class="min-h-screen bg-blue-50 flex items-center justify-center sm:p-8">
+          <div class="max-w-4xl w-full bg-white sm:rounded-2xl shadow-2xl px-4 py-12 sm:p-6 space-y-3 sm:space-y-4">
+            <div class="bg-gray-50 shadow p-3 sm:p-4 space-y-3">
               <div class="flex justify-between items-center">
                 <div class="flex gap-6 sm:gap-8 items-center">
                   <div class="text-center">
@@ -146,6 +146,15 @@ export function App() {
                     {mode === 'color' ? '色を答える' : '文字を答える'}
                   </div>
                 </div>
+              </div>
+
+              <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                <div
+                  class={`h-full transition-all duration-1000 ease-linear ${
+                    timeLeft <= 10 ? 'bg-red-500' : 'bg-blue-400'
+                  }`}
+                  style={{ width: `${(timeLeft / GAME_TIME_LIMIT) * 100}%` }}
+                />
               </div>
             </div>
 
