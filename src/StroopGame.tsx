@@ -24,7 +24,7 @@ const MODE_DISPLAY_MAP: Record<GameMode, string> = {
   'random': 'ランダム',
 }
 
-const GAME_TIME_LIMIT = 60 // ゲームの制限時間（秒）
+const GAME_TIME_LIMIT = 1 // ゲームの制限時間（秒）
 
 type GameMode = 'color' | 'text' | 'random'
 
@@ -156,33 +156,33 @@ export function StroopGame() {
   if (isGameScreenVisible) {
     return (
       <>
-        <div class="max-w-4xl w-full bg-white sm:rounded-2xl shadow-2xl px-4 py-12 sm:p-6 space-y-3 sm:space-y-4">
-          <div class="bg-gray-50 shadow p-3 sm:p-4 space-y-3">
+        <div class="max-w-4xl w-full bg-white dark:bg-gray-800 sm:rounded-2xl shadow-2xl px-4 py-12 sm:p-6 space-y-3 sm:space-y-4 transition-colors duration-300">
+          <div class="bg-gray-50 dark:bg-gray-700 shadow p-3 sm:p-4 space-y-3 transition-colors duration-300">
             <div class="flex justify-between items-center">
               <div class="flex gap-6 sm:gap-8 items-center">
                 <div class="text-center">
-                  <div class="text-xs text-gray-500 mb-1">スコア</div>
-                  <div class="text-2xl sm:text-3xl font-bold text-blue-600">{score}</div>
+                  <div class="text-xs text-gray-500 dark:text-gray-400 mb-1 transition-colors duration-300">スコア</div>
+                  <div class="text-2xl sm:text-3xl font-bold text-blue-600 dark:text-blue-400 transition-colors duration-300">{score}</div>
                 </div>
                 <div class="text-center">
-                  <div class="text-xs text-gray-500 mb-1">残り時間</div>
-                  <div class={`text-2xl sm:text-3xl font-bold ${timeLeft <= 10 ? 'text-red-500 animate-pulse' : 'text-gray-600'}`}>
+                  <div class="text-xs text-gray-500 dark:text-gray-400 mb-1 transition-colors duration-300">残り時間</div>
+                  <div class={`text-2xl sm:text-3xl font-bold ${timeLeft <= 10 ? 'text-red-500 animate-pulse' : 'text-gray-600 dark:text-gray-300'} transition-colors duration-300`}>
                     {timeLeft}秒
                   </div>
                 </div>
               </div>
               <div class="text-right">
-                <div class="text-xs text-gray-500 mb-1">モード</div>
-                <div class="font-bold text-gray-800">
+                <div class="text-xs text-gray-500 dark:text-gray-400 mb-1 transition-colors duration-300">モード</div>
+                <div class="font-bold text-gray-800 dark:text-gray-200 transition-colors duration-300">
                   {MODE_DISPLAY_MAP[mode]}
                 </div>
               </div>
             </div>
 
-            <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+            <div class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-3 overflow-hidden transition-colors duration-300">
               <div
                 class={`h-full transition-all duration-1000 ease-linear ${
-                  timeLeft <= 10 ? 'bg-red-500' : 'bg-blue-400'
+                  timeLeft <= 10 ? 'bg-red-500' : 'bg-blue-400 dark:bg-blue-500'
                 }`}
                 style={{ width: `${(timeLeft / GAME_TIME_LIMIT) * 100}%` }}
               />
@@ -192,10 +192,10 @@ export function StroopGame() {
           <div class="flex items-center justify-center mb-12 rounded-2xl relative">
             {result !== null && (
               <div class="absolute top-0 left-1/2 -translate-x-1/2 pointer-events-none">
-                <div class={`text-center py-2 px-6 rounded-lg font-bold text-lg sm:text-xl ${
+                <div class={`text-center py-2 px-6 rounded-lg font-bold text-lg sm:text-xl transition-colors duration-300 ${
                   result
-                    ? 'border border-green-500 text-green-500 bg-green-500/20'
-                    : 'border border-red-500 text-red-500 bg-red-500/20'
+                    ? 'border border-green-500 text-green-500 bg-green-500/20 dark:bg-green-500/30'
+                    : 'border border-red-500 text-red-500 bg-red-500/20 dark:bg-red-500/30'
                 }`}>
                   {result ? '⭕ 正解!' : '❌ 不正解'}
                 </div>
@@ -204,21 +204,21 @@ export function StroopGame() {
 
             <div class="mt-8">
               {currentMode && mode === 'random' && (
-                <div class="text-center mb-4 font-bold text-gray-800">
+                <div class="text-center mb-4 font-bold text-gray-800 dark:text-gray-200 transition-colors duration-300">
                   {currentMode === 'color' ? (
                     <div>
-                      <span class="text-xl text-blue-500">色</span>を答えてください
+                      <span class="text-xl text-blue-500 dark:text-blue-400">色</span>を答えてください
                     </div>
                   ) : (
                     <div>
-                      <span class="text-xl text-purple-500">文字</span>を答えてください
+                      <span class="text-xl text-purple-500 dark:text-purple-400">文字</span>を答えてください
                     </div>
                   )}
                 </div>
               )}
 
               {countdown !== null ? (
-                <div class="text-gray-600 text-6xl sm:text-8xl font-black">
+                <div class="text-gray-600 dark:text-gray-300 text-6xl sm:text-8xl font-black transition-colors duration-300">
                   {countdown}
                 </div>
               ) : (
@@ -256,7 +256,7 @@ export function StroopGame() {
               setTimeLeft(GAME_TIME_LIMIT)
               setTotalAnswers(0)
             }}
-            class="px-4 py-2 text-sm text-gray-500 bg-white/50 rounded-lg shadow-lg hover:bg-white hover:text-gray-700 transition-all border border-gray-300 cursor-pointer"
+            class="px-4 py-2 text-sm text-gray-500 dark:text-gray-400 bg-white/50 dark:bg-gray-800/50 rounded-lg shadow-lg hover:bg-white dark:hover:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 transition-all border border-gray-300 dark:border-gray-600 cursor-pointer"
           >
             終了
           </button>
@@ -270,31 +270,31 @@ export function StroopGame() {
     const accuracy = totalAnswers > 0 ? Math.round((score / totalAnswers) * 100) : 0;
     const avgTimePerAnswer = totalAnswers > 0 ? (GAME_TIME_LIMIT / totalAnswers).toFixed(1) : '0';
     return (
-		<div class="max-w-2xl w-full bg-white rounded-2xl shadow-2xl p-12 space-y-8 text-center">
-			<h1 class="text-5xl font-bold text-gray-800">終了！</h1>
+		<div class="max-w-2xl w-full bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-12 space-y-8 text-center transition-colors duration-300">
+			<h1 class="text-5xl font-bold text-gray-800 dark:text-gray-200 transition-colors duration-300">終了！</h1>
 
-			<div class="text-gray-600 text-lg">
+			<div class="text-gray-600 dark:text-gray-400 text-lg transition-colors duration-300">
 				モード: <span class="font-bold">{MODE_DISPLAY_MAP[mode]}</span>
 			</div>
 
-			<div class="bg-blue-400 rounded-xl p-10">
+			<div class="bg-blue-400 dark:bg-blue-600/30 rounded-xl p-10 transition-colors duration-300">
 				<div class="text-white text-2xl mb-3">正解数</div>
 				<div class="text-8xl font-bold text-white">{score}</div>
 				<div class="text-white text-xl mt-3">/ {totalAnswers}問</div>
 			</div>
 
 			<div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-				<div class="bg-green-50 rounded-xl p-6 border border-green-200">
-					<div class="text-green-600 text-sm font-semibold mb-2">正解率</div>
-					<div class="text-4xl font-bold text-green-700">{accuracy}%</div>
+				<div class="bg-green-50 dark:bg-green-900/20 rounded-xl p-6 border border-green-200 dark:border-green-700 transition-colors duration-300">
+					<div class="text-green-600 dark:text-green-400 text-sm font-semibold mb-2 transition-colors duration-300">正解率</div>
+					<div class="text-4xl font-bold text-green-700 dark:text-green-300 transition-colors duration-300">{accuracy}%</div>
 				</div>
-				<div class="bg-blue-50 rounded-xl p-6 border border-blue-200">
-					<div class="text-blue-600 text-sm font-semibold mb-2">平均回答時間</div>
-					<div class="text-4xl font-bold text-blue-700">{avgTimePerAnswer}秒</div>
+				<div class="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-6 border border-blue-200 dark:border-blue-700 transition-colors duration-300">
+					<div class="text-blue-600 dark:text-blue-400 text-sm font-semibold mb-2 transition-colors duration-300">平均回答時間</div>
+					<div class="text-4xl font-bold text-blue-700 dark:text-blue-300 transition-colors duration-300">{avgTimePerAnswer}秒</div>
 				</div>
-				<div class="bg-red-50 rounded-xl p-6 border border-red-200">
-					<div class="text-red-600 text-sm font-semibold mb-2">不正解</div>
-					<div class="text-4xl font-bold text-red-700">{totalAnswers - score}問</div>
+				<div class="bg-red-50 dark:bg-red-900/20 rounded-xl p-6 border border-red-200 dark:border-red-700 transition-colors duration-300">
+					<div class="text-red-600 dark:text-red-400 text-sm font-semibold mb-2 transition-colors duration-300">不正解</div>
+					<div class="text-4xl font-bold text-red-700 dark:text-red-300 transition-colors duration-300">{totalAnswers - score}問</div>
 				</div>
 			</div>
 
@@ -306,7 +306,7 @@ export function StroopGame() {
 					setMode(null)
 					setGameStarted(false)
 				}}
-				class="mt-6 px-8 py-4 bg-blue-500 rounded-xl hover:bg-blue-600 transform hover:scale-105 transition-all shadow-lg text-white font-bold cursor-pointer"
+				class="mt-6 px-8 py-4 bg-blue-500 dark:bg-blue-600 rounded-xl hover:bg-blue-600 dark:hover:bg-blue-700 transform hover:scale-105 transition-all shadow-lg text-white font-bold cursor-pointer"
 			>
 				ホームに戻る
 			</button>
@@ -317,31 +317,31 @@ export function StroopGame() {
   // ホーム画面
   return (
     <>
-      <div class="max-w-2xl w-full bg-white rounded-2xl shadow-2xl p-8">
-        <h1 class="text-4xl font-bold text-center text-gray-800 mb-12">
+      <div class="max-w-2xl w-full bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-8 transition-colors duration-300">
+        <h1 class="text-4xl font-bold text-center text-gray-800 dark:text-gray-200 mb-12 transition-colors duration-300">
           ストループ効果 脳トレ
         </h1>
         <div class="grid grid-cols-1 md:grid-cols-1 gap-4 justify-center">
           <button
             onClick={() => startGame('color')}
-            class="px-8 py-4 bg-blue-500 rounded-xl hover:bg-blue-600 transform hover:scale-105 transition-all shadow-lg cursor-pointer"
+            class="px-8 py-4 bg-blue-500 dark:bg-blue-700/60 rounded-xl hover:bg-blue-600 dark:hover:bg-blue-600/60 transform hover:scale-105 transition-all shadow-lg cursor-pointer"
           >
             <h2 class="text-xl font-bold text-white mb-2">色を答えるモード</h2>
-            <p class="text-sm text-gray-300">文字に惑わされず、文字の色を答えてください</p>
+            <p class="text-sm text-gray-300 dark:text-gray-400">文字に惑わされず、文字の色を答えてください</p>
           </button>
           <button
             onClick={() => startGame('text')}
-            class="px-8 py-4 bg-purple-500 rounded-xl hover:bg-purple-600 transform hover:scale-105 transition-all shadow-lg cursor-pointer"
+            class="px-8 py-4 bg-purple-500 dark:bg-purple-700/60 rounded-xl hover:bg-purple-600 dark:hover:bg-purple-600/60 transform hover:scale-105 transition-all shadow-lg cursor-pointer"
           >
             <h2 class="text-xl font-bold text-white mb-2">文字を答えるモード</h2>
-            <p class="text-sm text-gray-300">色に惑わされず、文字を答えてください</p>
+            <p class="text-sm text-gray-300 dark:text-gray-400">色に惑わされず、文字を答えてください</p>
           </button>
           <button
             onClick={() => startGame('random')}
-            class="px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl transform hover:scale-105 transition-all shadow-lg cursor-pointer"
+            class="px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-500 dark:from-blue-700/80 dark:to-purple-700/80 rounded-xl transform hover:scale-105 transition-all shadow-lg cursor-pointer"
           >
             <h2 class="text-xl font-bold text-white mb-2">ランダムモード</h2>
-            <p class="text-sm text-gray-300">
+            <p class="text-sm text-gray-300 dark:text-gray-400">
               色を答えるモードと文字を答えるモードがランダムに切り替わります
             </p>
           </button>
