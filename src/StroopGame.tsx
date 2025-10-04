@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'preact/hooks'
 import './app.css'
+import { Logo } from './Logo'
 
 // 使用する色名
 const COLORS = [
@@ -318,6 +319,9 @@ export function StroopGame() {
   return (
     <>
       <div class="max-w-2xl w-full bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-8 transition-colors duration-300">
+        <div class="flex justify-center mb-8">
+          <Logo />
+        </div>
         <h1 class="text-4xl font-bold text-center text-gray-800 dark:text-gray-200 mb-12 transition-colors duration-300">
           ストループ効果 脳トレ
         </h1>
