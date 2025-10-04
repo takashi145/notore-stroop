@@ -24,7 +24,7 @@ const MODE_DISPLAY_MAP: Record<GameMode, string> = {
   'random': 'ランダム',
 }
 
-const GAME_TIME_LIMIT = 1 // ゲームの制限時間（秒）
+const GAME_TIME_LIMIT = 60 // ゲームの制限時間（秒）
 
 type GameMode = 'color' | 'text' | 'random'
 
