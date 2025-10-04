@@ -31,11 +31,13 @@ export function App() {
   const [result, setResult] = useState<boolean | null>(null)  // 正解・不正解
   const [disabled, setDisabled] = useState(false) // 回答ボタンの無効化
   const [totalAnswers, setTotalAnswers] = useState(0)
+  const [countdown, setCountdown] = useState<number | null>(null) // ゲーム開始前のカウントダウン
 
   // ゲーム開始
   const startGame = (selectedMode: GameMode) => {
     setMode(selectedMode)
-    setGameStarted(true)
+    setCountdown(3)
+    setDisabled(true)
   }
 
   // 新しい問題を生成
@@ -95,8 +97,31 @@ export function App() {
     return () => clearInterval(timer)
   }, [gameStarted])
 
+  // ゲーム開始前のカウントダウン
+  useEffect(() => {
+    if (countdown === null) return
+
+    if (countdown === 0) {
+      setCountdown(null)
+      setGameStarted(true)
+      generateNewChallenge()
+      setDisabled(false)
+      return
+    }
+
+    const timer = setTimeout(() => {
+      setCountdown(countdown - 1)
+    }, 1000)
+
+    return () => clearTimeout(timer)
+  }, [countdown])
+
+  // ゲーム画面表示判定
+  // ゲームが開始されているか、カウントダウン中であること
+  const isGameScreenVisible = (gameStarted || countdown !== null) && mode !== null && timeLeft > 0;
+
   // ゲーム画面
-  if (gameStarted && mode !== null && timeLeft > 0) {
+  if (isGameScreenVisible) {
     return (
       <>
         <div class="min-h-screen bg-blue-50 flex items-center justify-center p-8">
@@ -125,12 +150,18 @@ export function App() {
             </div>
 
             <div class="flex items-center justify-center my-12 rounded-2xl relative">
-              <div
-                class="text-8xl md:text-9xl font-black text-center w-full"
-                style={{ color: COLOR_MAP[displayColor] }}
-              >
-                {displayText}
-              </div>
+              {countdown !== null ? (
+                <div class="text-gray-600 text-6xl sm:text-8xl font-black">
+                  {countdown}
+                </div>
+              ) : (
+                <div
+                  class="text-8xl md:text-9xl font-black text-center w-full"
+                  style={{ color: COLOR_MAP[displayColor] }}
+                >
+                  {displayText}
+                </div>
+              )}
 
               {result !== null && (
                 <div class="absolute -top-2.5 left-1/2 -translate-x-1/2 pointer-events-none">
