@@ -9,12 +9,12 @@ const COLORS = [
   '黄',
 ]
 
-// 色名とカラーコ―ドのマッピング
+// 色名とカラーコードのマッピング
 const COLOR_MAP: Record<typeof COLORS[number], string> = {
-  '赤': '#ff0000',
-  '青': '#0000ff',
-  '緑': '#00ff00',
-  '黄': '#ffff00',
+  '赤': '#e53935',
+  '青': '#1565c0',
+  '緑': '#388e3c',
+  '黄': '#fbc02d',
 }
 
 const GAME_TIME_LIMIT = 60 // ゲームの制限時間（秒）
