@@ -29,6 +29,7 @@ export function App() {
   const [displayText, setDisplayText] = useState('')
   const [displayColor, setDisplayColor] = useState('')
   const [result, setResult] = useState<boolean | null>(null)  // 正解・不正解
+  const [disabled, setDisabled] = useState(false) // 回答ボタンの無効化
 
   // ゲーム開始
   const startGame = (selectedMode: GameMode) => {
@@ -43,6 +44,30 @@ export function App() {
     setDisplayText(randomText);
     setDisplayColor(randomColor);
   };
+
+  // 回答処理
+  const handleAnswer = (answer: string) => {
+    if (result !== null) return; // 結果表示中は無効化
+
+    setDisabled(true);
+
+    const correctAnswer = mode === 'color' ? displayColor : displayText;
+
+    if (answer === correctAnswer) {
+      setScore((prev) => prev + 1);
+      setResult(true);
+    } else {
+      setResult(false);
+    }
+
+    // 次の問題を表示
+    // 若干遅延させて結果を見せる
+    setTimeout(() => {
+      setResult(null);
+      generateNewChallenge();
+      setDisabled(false);
+    }, 500);
+  }
 
   // ゲーム開始時にタイマーをセット
   useEffect(() => {
@@ -110,11 +135,11 @@ export function App() {
               </div>
 
               {result !== null && (
-                <div class="absolute top-2 left-1/2 -translate-x-1/2 pointer-events-none">
+                <div class="absolute -top-2.5 left-1/2 -translate-x-1/2 pointer-events-none">
                   <div class={`text-center py-2 px-6 rounded-lg font-bold text-lg sm:text-xl ${
                     result
-                      ? 'bg-green-500 text-white'
-                      : 'bg-red-500 text-white'
+                      ? 'border border-green-500 text-green-500 bg-green-500/20'
+                      : 'border border-red-500 text-red-500 bg-red-500/20'
                   }`}>
                     {result ? '⭕ 正解!' : '❌ 不正解'}
                   </div>
@@ -126,8 +151,10 @@ export function App() {
               {COLORS.map(color => (
                 <button
                   key={color}
-                  class="aspect-square text-xl sm:text-2xl font-bold rounded-xl border-4 shadow-lg flex items-center justify-center transition-all hover:scale-105 active:scale-95 cursor-pointer"
+                  class="aspect-square text-xl sm:text-2xl font-bold rounded-xl border-4 shadow-lg flex items-center justify-center transition-all disabled:opacity-40 enabled:hover:scale-105 disabled:enabled:active:scale-95 enabled:cursor-pointer"
                   style={{ borderColor: COLOR_MAP[color], color: COLOR_MAP[color] }}
+                  disabled={disabled || result !== null}
+                  onClick={() => handleAnswer(color)}
                 >
                   {color}
                 </button>
